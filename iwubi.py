@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
-import sqlite3
-
 import gi
+import sqlite3
 
 import logconfig
 
@@ -112,8 +111,11 @@ class IWubi(object):
         # freq==0 is large Chinese Table
         # query Wubi
         table_size = 5
-        query = "SELECT tabkeys, phrase, user_freq FROM phrases " \
-                "WHERE tabkeys LIKE '{}%' AND freq>0 LIMIT {}".format(preedit_string, table_size)
+        query = """SELECT tabkeys, phrase, user_freq
+            FROM phrases
+            WHERE tabkeys LIKE '{}%'
+                AND substr(tabkeys, 1, {}) = '{}'
+                AND freq>0 LIMIT {}""".format(preedit_string, len(preedit_string), preedit_string, table_size)
         wubi_list = list(c.execute(query))
         for row in wubi_list:
             output.append([row[1], row[1] + row[0][len(preedit_string):]])
@@ -122,14 +124,17 @@ class IWubi(object):
         # query pinyin
         pinyin_size = table_size - len_wubi_list
         if pinyin_size > 0:
-            query = "SELECT phrase FROM pinyins " \
-                    "WHERE pinyin LIKE '{}%' AND freq>0 ORDER BY freq DESC LIMIT {}".format(preedit_string, pinyin_size)
+            query = """SELECT phrase
+                FROM pinyins
+                WHERE pinyin LIKE '{}%'
+                    AND freq>0
+                    AND substr(pinyin, 1, {}) = '{}'
+                ORDER BY freq DESC LIMIT {}""".format(preedit_string, len(preedit_string), preedit_string, pinyin_size)
             pinyin_list = list(c.execute(query))
             for phrase in pinyin_list:
                 phrase = phrase[0]
                 # Add Wubi tabkeys if exists
-                query = "SELECT tabkeys FROM phrases " \
-                        "WHERE phrase = '{}'".format(phrase)
+                query = """SELECT tabkeys FROM phrases WHERE phrase = '{}'""".format(phrase)
                 c.execute(query)
                 tabkeys = c.fetchone()
                 if tabkeys:
