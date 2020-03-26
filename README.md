@@ -10,6 +10,8 @@
 - [x] Wubi Pinyin mixed input.
 - [x] Show Wubi coding of Pinyin candidate.
 - [x] Chinese punctuation in Chinese mode, English punctuation in English mode.
+- [ ] `Z` key fuzzy search.
+- [ ] Cloud update Pinyin database.
 - [ ] Gnome input method indicator when switch English/Chinese.
 - [ ] deb packaging.
 
