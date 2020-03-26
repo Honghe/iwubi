@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component>
+    <name>com.github.honghe.iwubi</name>
+    <description>IBus Python Wubi</description>
+    <version>0.1</version>
+    <license>MIT</license>
+    <author>Wu Honghe&lt;leopardsaga@gmail.com&gt;</author>
+    <homepage>https://github.com</homepage>
+    <exec>/usr/bin/python3 /usr/share/iwubi/iwubi.py --ibus</exec>
+    <textdomain>iwubi</textdomain>
+    <engines>
+        <engine>
+            <name>iwubi</name>
+            <longname>iWubi</longname>
+            <description>IBus Python Wubi</description>
+            <language>zh</language>
+            <license>MIT</license>
+            <author>Wu Honghe&lt;leopardsaga@gmail.com&gt;</author>
+            <layout>us</layout>
+            <layout_variant></layout_variant>
+            <layout_option></layout_option>
+            <hotkeys></hotkeys>
+            <symbol>iW</symbol>
+            <setup></setup>
+            <version></version>
+            <textdomain></textdomain>
+            <rank>0</rank>
+        </engine>
+    </engines>
+</component>
