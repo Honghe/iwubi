@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
-import gi
+import collections
 import sqlite3
+
+import gi
 
 import logconfig
 
@@ -110,16 +112,36 @@ class IWubi(object):
 
         # freq==0 is large Chinese Table
         # query Wubi
-        table_size = 5
+        table_size = 10
+
+        # query Wubi exact
+        # use OrderedDict to filter duplicate
+        wubi_dict = collections.OrderedDict()
+        query = """SELECT phrase 
+            FROM phrases 
+            WHERE tabkeys = '{}' 
+                AND freq > 0 
+            ORDER BY freq 
+            DESC""".format(preedit_string)
+        wubi_list = list(c.execute(query))
+        for row in wubi_list:
+            wubi_dict[row[0]] = row[0]
+
+        # query Wubi like
         query = """SELECT tabkeys, phrase, user_freq
             FROM phrases
             WHERE tabkeys LIKE '{}%'
                 AND substr(tabkeys, 1, {}) = '{}'
-                AND freq>0 LIMIT {}""".format(preedit_string, len(preedit_string), preedit_string, table_size)
+                AND tabkeys != '{}'
+                AND freq > 0
+            ORDER BY freq DESC
+            LIMIT {}""".format(preedit_string, len(preedit_string), preedit_string, preedit_string,
+                               table_size - len(wubi_dict))
         wubi_list = list(c.execute(query))
         for row in wubi_list:
-            output.append([row[1], row[1] + row[0][len(preedit_string):]])
-        len_wubi_list = len(wubi_list)
+            wubi_dict[row[1]] = row[1] + row[0][len(preedit_string):]
+        output.extend(wubi_dict.items())
+        len_wubi_list = len(output)
 
         # query pinyin
         pinyin_size = table_size - len_wubi_list
